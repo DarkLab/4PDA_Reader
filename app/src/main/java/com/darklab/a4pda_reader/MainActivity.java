@@ -1,6 +1,8 @@
 package com.darklab.a4pda_reader;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -60,7 +63,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // TODO: 11.01.17 Можно добавить проверку подключения к сети
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null || !info.isConnected()) {
+            Toast.makeText(this, "Check Connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         new RSSDownloader().execute(BASE_URL);
     }
